@@ -53,3 +53,6 @@ print(doc._.resolved_text)
 ```
 ## Available models
 As of now, there are two models available "info_xlm", "xlm_roberta", which scored 77 and 74 on OntoNotes Release 5.0 English data, respectively.
+## More Examples
+![example](./img/example_total.png)
+
