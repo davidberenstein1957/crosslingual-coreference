@@ -45,7 +45,7 @@ class CrossLingualPredictorSpacy(Predictor):
                 yield doc
 
     @staticmethod
-    def assign_prediction_to_doc(doc, prediction):
+    def assign_prediction_to_doc(doc: Doc, prediction: dict):
         doc._.coref_clusters = prediction['clusters']
         doc._.resolved_text = prediction['resolved_text']
         return doc
