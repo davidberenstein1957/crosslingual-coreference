@@ -23,7 +23,7 @@ print(predictor.predict(text)["resolved_text"])
 # Many students survived by eating instant noodles, 
 # but Many students don't even know Momofuku Ando.
 ```
-![example](./img/example.png)
+![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_en.png)
 ## Use spaCy pipeline
 ```python
 import crosslingual_coreference
@@ -54,5 +54,5 @@ print(doc._.resolved_text)
 ## Available models
 As of now, there are two models available "info_xlm", "xlm_roberta", which scored 77 and 74 on OntoNotes Release 5.0 English data, respectively.
 ## More Examples
-![example](./img/example_total.png)
+![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_total.png)
 
