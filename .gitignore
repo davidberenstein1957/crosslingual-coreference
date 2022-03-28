@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 /models
 *.tar.gz
+/crosslingual_coreference/models

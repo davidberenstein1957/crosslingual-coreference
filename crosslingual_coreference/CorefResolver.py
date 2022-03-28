@@ -1,5 +1,6 @@
 from typing import List
 
+from py import test
 from spacy.tokens import Doc, Span
 
 
@@ -12,7 +13,13 @@ class CorefResolver(object):
     @staticmethod 
     def core_logic_part(document: Doc, coref: List[int], resolved: List[str], mention_span: Span):
         final_token = document[coref[1]]
-        if final_token.tag_ in ["PRP$", "POS"]:
+        final_token_tag = str(final_token.tag_).lower()
+        test_token_test = False
+        for option in ["PRP$", "POS", 'BEZ']:
+            if option.lower() in final_token_tag:
+                test_token_test = True
+                break
+        if test_token_test:
             resolved[coref[0]] = mention_span.text + "'s" + final_token.whitespace_
         else:
             resolved[coref[0]] = mention_span.text + final_token.whitespace_

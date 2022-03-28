@@ -1,4 +1,5 @@
 import pathlib
+from typing import List
 
 import requests
 import tqdm  # progress bar
@@ -21,7 +22,7 @@ MODELS = {
 
 
 class CrossLingualPredictor(object):
-    def __init__(self, language: str, device: int = -1, model_name: str = 'xlm_roberta') -> None:
+    def __init__(self, language: str, device: int = -1, model_name: str = 'info_xlm') -> None:
         self.language = language
         self.filename = None
         self.device = device
@@ -88,4 +89,5 @@ class CrossLingualPredictor(object):
             
         return prediction
         
-    
+    def pipe(self, texts: List[str], advanced_resolve: bool = True) -> List[dict]:
+        return [self.predict(text, advanced_resolve) for text in texts]
