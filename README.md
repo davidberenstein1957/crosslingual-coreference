@@ -1,6 +1,9 @@
 # Crosslingual Coreference
 Coreference is amazing but the data required for training a model is very scarce. In our case, the available training for non-English languages also proved to be poorly annotated. Crosslingual Coreference, therefore, uses the assumption a trained model with English data and cross-lingual embeddings should work for languages with similar sentence structures.
 
+[![Current Release Version](https://img.shields.io/github/release/pandora-intelligence/crosslingual-coreference.svg?style=flat-square&logo=github)](https://github.com/pandora-intelligence/crosslingual-coreference/releases)
+[![pypi Version](https://img.shields.io/pypi/v/crosslingual-coreference.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/crosslingual-coreference/)
+[![PyPi downloads](https://static.pepy.tech/personalized-badge/crosslingual-coreference?period=total&units=international_system&left_color=grey&right_color=orange&left_text=pip%20downloads)](https://pypi.org/project/crosslingual-coreference/)
 # Install
 
 ```
