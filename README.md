@@ -12,7 +12,7 @@ from crosslingual_coreference import Predictor
 
 text = "Do not forget about Momofuku Ando! He created instant noodles in Osaka. At that location, Nissin was founded. Many students survived by eating these noodles, but they don't even know him."
 
-predictor = Predictor(language="en_core_web_sm", device=-1, model="info_xlm")
+predictor = Predictor(language="en_core_web_sm", device=-1, model_name="info_xlm")
 
 print(predictor.predict(text)["resolved_text"])
 # Output
