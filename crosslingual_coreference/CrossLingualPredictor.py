@@ -70,7 +70,7 @@ class CrossLingualPredictor(object):
             https://towardsdatascience.com/how-to-make-an-effective-coreference-resolution-model-55875d2b5f19. Defaults to True.
 
         Returns:
-            _type_: _description_
+            dict: a prediciton
         """
         prediction = self.predictor.predict_json({"document": text})
         

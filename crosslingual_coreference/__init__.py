@@ -1,3 +1,6 @@
+import nltk
+
+nltk.download('omw-1.4')
 from spacy.language import Language
 
 from .CrossLingualPredictor import CrossLingualPredictor as Predictor
