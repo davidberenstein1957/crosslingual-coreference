@@ -78,7 +78,8 @@ class CrossLingualPredictor(object):
 
         # Passing a document with no coreferences returns its original form
         if not clusters:
-            return text
+            prediction['resolved_text'] = text
+            return prediction
         
         doc = self.predictor._spacy(text)
         
