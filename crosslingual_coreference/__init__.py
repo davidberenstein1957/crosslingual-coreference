@@ -1,12 +1,12 @@
 import nltk
 
 nltk.download("omw-1.4")
-from typing import Union
+from typing import Union  # noqa: E402
 
-from spacy.language import Language
+from spacy.language import Language  # noqa: E402
 
-from .CrossLingualPredictor import CrossLingualPredictor as Predictor
-from .CrossLingualPredictorSpacy import (
+from .CrossLingualPredictor import CrossLingualPredictor as Predictor  # noqa: E402
+from .CrossLingualPredictorSpacy import (  # noqa: E402
     CrossLingualPredictorSpacy as SpacyPredictor,
 )
 

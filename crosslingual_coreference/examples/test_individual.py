@@ -6,3 +6,4 @@ predictor = Predictor(language='nl_core_news_sm')
 
 print(predictor.pipe(texts))
 
+

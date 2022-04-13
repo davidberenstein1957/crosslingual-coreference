@@ -29,9 +29,7 @@ class CrossLingualPredictor(object):
         language: str,
         device: int = -1,
         model_name: str = "info_xlm",
-        chunk_size: Union[
-            int, None
-        ] = None,  # determines the # sentences per batch
+        chunk_size: Union[int, None] = None,  # determines the # sentences per batch
         chunk_overlap: int = 2,  # determines the # of overlapping sentences per chunk
     ) -> None:
         self.chunk_size = chunk_size
@@ -46,11 +44,9 @@ class CrossLingualPredictor(object):
 
     def download_model(self):
         """
-        Download file with progressbar if file is present, otherwise pass
+        It downloads the model from the url provided and saves it in the current directory
         """
-        self.filename = self.model_url.replace(
-            "https://storage.googleapis.com/pandora-intelligence/", ""
-        )
+        self.filename = self.model_url.replace("https://storage.googleapis.com/pandora-intelligence/", "")
         path = pathlib.Path(self.filename)
         if path.is_file():
             pass
@@ -74,9 +70,7 @@ class CrossLingualPredictor(object):
 
     def set_coref_model(self):
         """Initialize AllenNLP coreference model"""
-        self.predictor = Predictor.from_path(
-            self.filename, language=self.language, cuda_device=self.device
-        )
+        self.predictor = Predictor.from_path(self.filename, language=self.language, cuda_device=self.device)
 
     def predict(self, text: str, advanced_resolve: bool = True) -> dict:
         """predict and rsolve
@@ -97,14 +91,11 @@ class CrossLingualPredictor(object):
             chunks = [text]
 
         # make predictions for individual chunks
-        predictions = [
-            self.predictor.predict_json({"document": chunk}) for chunk in chunks
-        ]
+        predictions = [self.predictor.predict_json({"document": chunk}) for chunk in chunks]
 
         # determine doc_lengths to resolve overlapping chunks
         doc_lengths = [
-            sum([len(sent) for sent in list(doc_chunk.sents)[:-2]])
-            for doc_chunk in self.predictor._spacy.pipe(chunks)
+            sum([len(sent) for sent in list(doc_chunk.sents)[:-2]]) for doc_chunk in self.predictor._spacy.pipe(chunks)
         ]
         doc_lengths = [0] + doc_lengths[:-1]
 
@@ -113,13 +104,7 @@ class CrossLingualPredictor(object):
         corrected_clusters = []
         for idx, doc_clus in enumerate(all_clusters):
             corrected_clusters.append(
-                [
-                    [
-                        [num + sum(doc_lengths[: idx + 1]) for num in span]
-                        for span in clus
-                    ]
-                    for clus in doc_clus
-                ]
+                [[[num + sum(doc_lengths[: idx + 1]) for num in span] for span in clus] for clus in doc_clus]
             )
 
         merged_clusters = self.merge_clusters(corrected_clusters)
@@ -131,9 +116,16 @@ class CrossLingualPredictor(object):
 
         return prediction
 
-    def pipe(
-        self, texts: List[str], advanced_resolve: bool = True
-    ) -> List[dict]:
+    def pipe(self, texts: List[str], advanced_resolve: bool = True) -> List[dict]:
+        """
+        > The function takes a list of strings and returns a list of dictionaries
+
+        :param texts: List[str]
+        :type texts: List[str]
+        :param advanced_resolve: If True, the model will try to resolve the ambiguity of the entities, defaults to True
+        :type advanced_resolve: bool (optional)
+        :return: A list of dictionaries.
+        """
         return [self.predict(text, advanced_resolve) for text in texts]
 
     def chunk_sentencized_doc(self, doc: Doc) -> List[str]:
@@ -159,12 +151,8 @@ class CrossLingualPredictor(object):
                 temp_len += len(s) + 1
             else:
                 result.append(temp_chunk[:])
-                overlap_sentences = temp_chunk[
-                    len(temp_chunk) - self.chunk_overlap :
-                ]
-                len_overlap_sentences = (
-                    sum(len(str(x)) + 1 for x in overlap_sentences) - 1
-                )
+                overlap_sentences = temp_chunk[len(temp_chunk) - self.chunk_overlap :]
+                len_overlap_sentences = sum(len(str(x)) + 1 for x in overlap_sentences) - 1
                 temp_chunk = []
                 temp_chunk.extend(overlap_sentences)
                 temp_chunk.append(sentence)
@@ -193,10 +181,7 @@ class CrossLingualPredictor(object):
                             if main_span == span:
                                 combined_clus = main_clus + clus
                                 combined_clus.sort()
-                                combined_clus = list(
-                                    k
-                                    for k, _ in itertools.groupby(combined_clus)
-                                )
+                                combined_clus = list(k for k, _ in itertools.groupby(combined_clus))
                                 combine_clus = True
                                 break
                         if combine_clus:
