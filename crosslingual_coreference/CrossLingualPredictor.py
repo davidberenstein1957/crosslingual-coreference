@@ -11,12 +11,12 @@ from .CorefResolver import CorefResolver as Resolver
 
 MODELS = {
     "xlm_roberta": {
-        "url": "https://storage.googleapis.com/pandora-intelligence/models/crosslingual-coreference/xlm-roberta-base/model.tar.gz",
+        "url": "https://storage.googleapis.com/pandora-intelligence/models/crosslingual-coreference/xlm-roberta-base/model.tar.gz",  # noqa: B950
         "f1_score_ontonotes": 74,
         "file_extension": ".tar.gz",
     },
     "info_xlm": {
-        "url": "https://storage.googleapis.com/pandora-intelligence/models/crosslingual-coreference/infoxlm-base/model.tar.gz",
+        "url": "https://storage.googleapis.com/pandora-intelligence/models/crosslingual-coreference/infoxlm-base/model.tar.gz",  # noqa: B950
         "f1_score_ontonotes": 77,
         "file_extension": ".tar.gz",
     },
@@ -78,7 +78,8 @@ class CrossLingualPredictor(object):
         Args:
             text (str): an input text
             advanced_resolve (bool, optional): use more advanced resoled from
-            https://towardsdatascience.com/how-to-make-an-effective-coreference-resolution-model-55875d2b5f19. Defaults to True.
+            https://towardsdatascience.com/how-to-make-an-effective-coreference-resolution-model-55875d2b5f19.
+            Defaults to True.
 
         Returns:
             dict: a prediciton

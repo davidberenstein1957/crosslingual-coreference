@@ -89,4 +89,3 @@ print(doc._.resolved_text)
 As of now, there are two models available "info_xlm", "xlm_roberta", which scored 77 and 74 on OntoNotes Release 5.0 English data, respectively.
 ## More Examples
 ![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_total.png)
-
