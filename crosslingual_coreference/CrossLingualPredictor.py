@@ -124,17 +124,35 @@ class CrossLingualPredictor(object):
 
         return prediction
 
-    def pipe(self, texts: List[str], advanced_resolve: bool = True) -> List[dict]:
+    def pipe(self, texts: List[str], advanced_resolve: bool = True):
         """
-        > The function takes a list of strings and returns a list of dictionaries
+        Produce a document where each coreference is replaced by its main mention
 
-        :param texts: List[str]
-        :type texts: List[str]
-        :param advanced_resolve: If True, the model will try to resolve the ambiguity of the entities, defaults to True
-        :type advanced_resolve: bool (optional)
-        :return: A list of dictionaries.
+        # Parameters
+
+        document : List[`str`]
+            A string representation of a document.
+
+        # Returns
+
+        A string with each coreference replaced by its main mention
         """
-        return [self.predict(text, advanced_resolve) for text in texts]
+
+        spacy_document_list = list(self.predictor._spacy.pipe(texts))
+        json_batch = [{"document": document} for document in texts]
+        json_predictions = self.predictor.predict_batch_json(json_batch)
+        clusters_predictions = [prediction.get("clusters") for prediction in json_predictions]
+
+        predictions = []
+        for spacy_doc, cluster in zip(spacy_document_list, clusters_predictions):
+            predictions.append(
+                {
+                    "clusters": cluster,
+                    "resolved_text": self.resolver.replace_corefs(spacy_doc, cluster),
+                }
+            )
+
+        return predictions
 
     def chunk_sentencized_doc(self, doc: Doc) -> List[str]:
         """Split spacy doc object into chunks of maximum size 'chunk_size' with
