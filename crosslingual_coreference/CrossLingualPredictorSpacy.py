@@ -11,7 +11,7 @@ class CrossLingualPredictorSpacy(Predictor):
         self,
         language: str,
         device: int = -1,
-        model_name: str = "info_xlm",
+        model_name: str = "minilm",
         chunk_size: Union[int, None] = None,
         chunk_overlap: int = 2,
     ) -> None:

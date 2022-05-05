@@ -21,8 +21,9 @@ text = (
     " noodles, but they don't even know him."
 )
 
+# choose minilm for speed/memory and info_xlm for accuracy
 predictor = Predictor(
-    language="en_core_web_sm", device=-1, model_name="info_xlm"
+    language="en_core_web_sm", device=-1, model_name="minilm"
 )
 
 print(predictor.predict(text)["resolved_text"])
@@ -44,7 +45,7 @@ from crosslingual_coreference import Predictor
 predictor = Predictor(
     language="en_core_web_sm",
     device=0,
-    model_name="info_xlm",
+    model_name="minilm",
     chunk_size=2500,
     chunk_overlap=2,
 )
@@ -86,6 +87,6 @@ print(doc._.resolved_text)
 # but Many students don't even know Momofuku Ando.
 ```
 ## Available models
-As of now, there are two models available "info_xlm", "xlm_roberta", which scored 77 and 74 on OntoNotes Release 5.0 English data, respectively.
+As of now, there are two models available "info_xlm", "xlm_roberta", "minilm", which scored 77, 74 and 74 on OntoNotes Release 5.0 English data, respectively.
 ## More Examples
 ![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_total.png)

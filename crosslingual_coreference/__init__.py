@@ -17,7 +17,7 @@ __all__ = ["Predictor"]
     "xx_coref",
     default_config={
         "device": -1,
-        "model_name": "info_xlm",
+        "model_name": "minilm",
         "chunk_size": None,
         "chunk_overlap": 2,
     },

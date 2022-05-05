@@ -20,6 +20,13 @@ MODELS = {
         "f1_score_ontonotes": 77,
         "file_extension": ".tar.gz",
     },
+    "minilm": {
+        "url": (
+            "https://storage.googleapis.com/pandora-intelligence/models/crosslingual-coreference/minilm/model.tar.gz"
+        ),
+        "f1_score_ontonotes": 74,
+        "file_extension": ".tar.gz",
+    },
 }
 
 
@@ -28,7 +35,7 @@ class CrossLingualPredictor(object):
         self,
         language: str,
         device: int = -1,
-        model_name: str = "info_xlm",
+        model_name: str = "minilm",
         chunk_size: Union[int, None] = None,  # determines the # sentences per batch
         chunk_overlap: int = 2,  # determines the # of overlapping sentences per chunk
     ) -> None:
