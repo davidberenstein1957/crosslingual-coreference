@@ -27,6 +27,11 @@ MODELS = {
         "f1_score_ontonotes": 74,
         "file_extension": ".tar.gz",
     },
+    "spanbert": {
+        "url": "https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2021.03.10.tar.gz",
+        "f1_score_ontonotes": 83,
+        "file_extension": ".tar.gz",
+    },
 }
 
 
