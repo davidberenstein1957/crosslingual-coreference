@@ -37,6 +37,12 @@ print(predictor.predict(text)["resolved_text"])
 ```
 ![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_en.png)
 
+## Models
+As of now, there are two models available "spanbert", "info_xlm", "xlm_roberta", "minilm", which scored 83, 77, 74 and 74 on OntoNotes Release 5.0 English data, respectively. 
+- The "minilm" model is the best quality speed trade-off for both mult-lingual and english texts. 
+- The "info_xlm" model produces the best quality for multi-lingual texts.
+- The AllenNLP "spanbert" model produces the best quality for english texts.
+
 ## Chunking/batching to resolve memory OOM errors
 
 ```python
@@ -86,7 +92,6 @@ print(doc._.resolved_text)
 # Many students survived by eating instant noodles,
 # but Many students don't even know Momofuku Ando.
 ```
-## Available models
-As of now, there are two models available "info_xlm", "xlm_roberta", "minilm", which scored 77, 74 and 74 on OntoNotes Release 5.0 English data, respectively.
+
 ## More Examples
 ![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_total.png)
