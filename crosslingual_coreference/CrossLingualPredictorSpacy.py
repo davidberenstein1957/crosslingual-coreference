@@ -18,6 +18,7 @@ class CrossLingualPredictorSpacy(Predictor):
         super().__init__(language, device, model_name, chunk_size, chunk_overlap)
         Doc.set_extension("coref_clusters", default=None, force=True)
         Doc.set_extension("resolved_text", default=None, force=True)
+        Doc.set_extension("cluster_heads", default=None, force=True)
 
     def __call__(self, doc: Doc) -> Doc:
         """
@@ -29,7 +30,7 @@ class CrossLingualPredictorSpacy(Predictor):
         Returns:
             Doc: spacy doc with ._.cats key-class proba-value dict
         """
-        prediction = super(self.__class__, self).predict(doc.text.replace("\n", " "))
+        prediction = super(self.__class__, self).predict(doc.text)
         doc = self.assign_prediction_to_doc(doc, prediction)
         return doc
 
@@ -44,7 +45,7 @@ class CrossLingualPredictorSpacy(Predictor):
             Doc: spacy doc with ._.cats key-class proba-value dict
         """
         for docs in util.minibatch(stream, size=batch_size):
-            texts = [doc.text.replace("\n", " ") for doc in docs]
+            texts = [doc.text for doc in docs]
 
             pred_results = super(self.__class__, self).pipe(texts)
 
@@ -66,4 +67,5 @@ class CrossLingualPredictorSpacy(Predictor):
         """
         doc._.coref_clusters = prediction["clusters"]
         doc._.resolved_text = prediction["resolved_text"]
+        doc._.cluster_heads = prediction["cluster_heads"]
         return doc

@@ -133,3 +133,6 @@ dmypy.json
 test.py
 /batching.ipynb
 /test.py
+*.onnx
+test_onnx.ipynb
+error.py

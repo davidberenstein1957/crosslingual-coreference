@@ -84,14 +84,14 @@ class CrossLingualPredictor(object):
         """Initialize AllenNLP coreference model"""
         self.predictor = Predictor.from_path(self.filename, language=self.language, cuda_device=self.device)
 
-    def predict(self, text: str, advanced_resolve: bool = True) -> dict:
+    def predict(self, text: str) -> dict:
         """predict and rsolve
 
         Args:
             text (str): an input text
-            advanced_resolve (bool, optional): use more advanced resoled from
+            uses more advanced resolve from:
             https://towardsdatascience.com/how-to-make-an-effective-coreference-resolution-model-55875d2b5f19.
-            Defaults to True.
+
 
         Returns:
             dict: a prediciton
@@ -104,7 +104,8 @@ class CrossLingualPredictor(object):
             chunks = [text]
 
         # make predictions for individual chunks
-        predictions = [self.predictor.predict_json({"document": chunk}) for chunk in chunks]
+        json_batch = [{"document": chunk} for chunk in chunks]
+        predictions = self.predictor.predict_batch_json(json_batch)
 
         # determine doc_lengths to resolve overlapping chunks
         doc_lengths = [
@@ -121,41 +122,36 @@ class CrossLingualPredictor(object):
             )
 
         merged_clusters = self.merge_clusters(corrected_clusters)
+        resolved_text, heads = self.resolver.replace_corefs(doc, merged_clusters)
 
-        prediction = {
-            "clusters": merged_clusters,
-            "resolved_text": self.resolver.replace_corefs(doc, merged_clusters),
-        }
+        prediction = {"clusters": merged_clusters, "resolved_text": resolved_text, "cluster_heads": heads}
 
         return prediction
 
-    def pipe(self, texts: List[str], advanced_resolve: bool = True):
+    def pipe(self, texts: List[str]):
         """
         Produce a document where each coreference is replaced by its main mention
 
         # Parameters
-
-        document : List[`str`]
+        texts : List[`str`]
             A string representation of a document.
 
         # Returns
-
         A string with each coreference replaced by its main mention
         """
-
         spacy_document_list = list(self.predictor._spacy.pipe(texts))
-        json_batch = [{"document": document} for document in texts]
-        json_predictions = self.predictor.predict_batch_json(json_batch)
-        clusters_predictions = [prediction.get("clusters") for prediction in json_predictions]
-
         predictions = []
-        for spacy_doc, cluster in zip(spacy_document_list, clusters_predictions):
-            predictions.append(
-                {
-                    "clusters": cluster,
-                    "resolved_text": self.resolver.replace_corefs(spacy_doc, cluster),
-                }
-            )
+        if self.chunk_size:
+            for text in texts:
+                predictions.append(self.predict(text))
+        else:
+            json_batch = [{"document": document} for document in texts]
+            json_predictions = self.predictor.predict_batch_json(json_batch)
+            clusters_predictions = [prediction.get("clusters") for prediction in json_predictions]
+
+            for spacy_doc, cluster in zip(spacy_document_list, clusters_predictions):
+                resolved_text, heads = self.resolver.replace_corefs(spacy_doc, cluster)
+                predictions.append({"clusters": cluster, "resolved_text": resolved_text, "cluster_heads": heads})
 
         return predictions
 

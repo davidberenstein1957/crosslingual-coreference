@@ -27,6 +27,7 @@ predictor = Predictor(
 )
 
 print(predictor.predict(text)["resolved_text"])
+# Note you can also get 'cluster_heads' and 'clusters'
 # Output
 #
 # Do not forget about Momofuku Ando!
@@ -91,6 +92,14 @@ print(doc._.resolved_text)
 # At Osaka, Nissin was founded.
 # Many students survived by eating instant noodles,
 # but Many students don't even know Momofuku Ando.
+print(doc._.cluster_heads)
+# Output
+# 
+# {Momofuku Ando: [5, 6], 
+# instant noodles: [11, 12], 
+# Osaka: [14, 14], 
+# Nissin: [21, 21], 
+# Many students: [26, 27]} 
 ```
 
 ## More Examples

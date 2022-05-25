@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from spacy.tokens import Doc, Span
 
@@ -86,7 +86,7 @@ class CorefResolver(object):
         """
         return any([s[0] >= span[0] and s[1] <= span[1] and s != span for s in all_spans])
 
-    def replace_corefs(self, document: Doc, clusters: List[List[int]]) -> str:
+    def replace_corefs(self, document: Doc, clusters: List[List[int]]) -> Tuple[str, dict]:
         """
         > For each cluster, find the head noun, and replace all other mentions with the head noun
 
@@ -98,14 +98,15 @@ class CorefResolver(object):
         """
         resolved = list(tok.text_with_ws for tok in document)
         all_spans = [span for cluster in clusters for span in cluster]  # flattened list of all spans
-
+        cluster_heads = {}
         for cluster in clusters:
             noun_indices = self.get_span_noun_indices(document, cluster)
 
             if noun_indices:
                 mention_span, mention = self.get_cluster_head(document, cluster, noun_indices)
+                cluster_heads[mention_span] = mention
 
                 for coref in cluster:
                     if coref != mention and not self.is_containing_other_spans(coref, all_spans):
                         self.core_logic_part(document, coref, resolved, mention_span)
-        return "".join(resolved)
+        return "".join(resolved), cluster_heads
