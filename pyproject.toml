@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crosslingual-coreference"
-version = "0.2.5"
+version = "0.2.6"
 description = "A multi-lingual approach to AllenNLP CoReference Resolution, along with a wrapper for spaCy."
 authors = ["David Berenstein <david.berenstein@pandoraintelligence.com>"]
 license = "MIT"
@@ -22,25 +22,24 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7.1,<4.0"
-allennlp = ">=2.8,<3.0"
-allennlp-models = ">=2.8,<3.0"
-spacy = ">=3.1.0,<4.0"
-click = "<8.1.0"
-torch = ">=1.10.0,<1.11.0"
-torchaudio = "<0.11"
-torchvision = "<0.12.0"
+python = "~3.7.1"
+allennlp = "~2.8"
+allennlp-models = "~2.8"
+spacy = "~3.1"
+protobuf = "~3.19"
+checklist = "^0.0.11"
+Pillow = ">9.1"
 
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.0.1"
-flake8 = "^4.0.1"
-black = "^22.3.0"
-flake8-bugbear = "^22.3.23"
-flake8-docstrings = "^1.6.0"
-isort = "^5.10.1"
-pep8-naming = "^0.12.1"
-pre-commit = "^2.17.0"
+pytest = "~7.0"
+flake8 = "~4.0"
+black = "~22.3"
+flake8-bugbear = "~22.3"
+flake8-docstrings = "~1.6"
+isort = "^5.10"
+pep8-naming = "^~0.12"
+pre-commit = "~2.17"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

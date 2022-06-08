@@ -1,3 +1,5 @@
+import warnings
+
 import nltk
 
 nltk.download("omw-1.4")
@@ -10,6 +12,8 @@ from .CrossLingualPredictorSpacy import (  # noqa: E402
     CrossLingualPredictorSpacy as SpacyPredictor,
 )
 
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 __all__ = ["Predictor"]
 
 

@@ -58,7 +58,10 @@ class CrossLingualPredictor(object):
         """
         It downloads the model from the url provided and saves it in the current directory
         """
-        self.filename = self.model_url.replace("https://storage.googleapis.com/pandora-intelligence/", "")
+        if "https://storage.googleapis.com/pandora-intelligence/" in self.model_url:
+            self.filename = self.model_url.replace("https://storage.googleapis.com/pandora-intelligence/", "")
+        else:
+            self.filename = self.model_url.replace("https://storage.googleapis.com/allennlp-public-models/", "")
         path = pathlib.Path(self.filename)
         if path.is_file():
             pass
