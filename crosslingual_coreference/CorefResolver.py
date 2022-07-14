@@ -104,7 +104,7 @@ class CorefResolver(object):
 
             if noun_indices:
                 mention_span, mention = self.get_cluster_head(document, cluster, noun_indices)
-                cluster_heads[mention_span] = mention
+                cluster_heads[str(mention_span)] = mention
 
                 for coref in cluster:
                     if coref != mention and not self.is_containing_other_spans(coref, all_spans):
