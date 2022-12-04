@@ -39,8 +39,8 @@ print(predictor.predict(text)["resolved_text"])
 ![](https://raw.githubusercontent.com/Pandora-Intelligence/crosslingual-coreference/master/img/example_en.png)
 
 ## Models
-As of now, there are two models available "spanbert", "info_xlm", "xlm_roberta", "minilm", which scored 83, 77, 74 and 74 on OntoNotes Release 5.0 English data, respectively. 
-- The "minilm" model is the best quality speed trade-off for both mult-lingual and english texts. 
+As of now, there are two models available "spanbert", "info_xlm", "xlm_roberta", "minilm", which scored 83, 77, 74 and 74 on OntoNotes Release 5.0 English data, respectively.
+- The "minilm" model is the best quality speed trade-off for both mult-lingual and english texts.
 - The "info_xlm" model produces the best quality for multi-lingual texts.
 - The AllenNLP "spanbert" model produces the best quality for english texts.
 
@@ -94,12 +94,40 @@ print(doc._.resolved_text)
 # but Many students don't even know Momofuku Ando.
 print(doc._.cluster_heads)
 # Output
-# 
-# {Momofuku Ando: [5, 6], 
-# instant noodles: [11, 12], 
-# Osaka: [14, 14], 
-# Nissin: [21, 21], 
-# Many students: [26, 27]} 
+#
+# {Momofuku Ando: [5, 6],
+# instant noodles: [11, 12],
+# Osaka: [14, 14],
+# Nissin: [21, 21],
+# Many students: [26, 27]}
+```
+### Visualize spacy pipeline
+This only works with spacy >= 3.3.
+```python
+import spacy
+import crosslingual_coreference
+from spacy.tokens import Span
+from spacy import displacy
+
+text = (
+    "Do not forget about Momofuku Ando! He created instant noodles in Osaka. At"
+    " that location, Nissin was founded. Many students survived by eating these"
+    " noodles, but they don't even know him."
+)
+
+nlp = spacy.load("nl_core_news_sm")
+nlp.add_pipe("xx_coref", config={"model_name": "minilm"})
+doc = nlp(text)
+spans = []
+for idx, cluster in enumerate(doc._.coref_clusters):
+    for span in cluster:
+        spans.append(
+            Span(doc, span[0], span[1]+1, str(idx).upper())
+        )
+
+doc.spans["custom"] = spans
+
+displacy.render(doc, style="span", options={"spans_key": "custom"})
 ```
 
 ## More Examples
