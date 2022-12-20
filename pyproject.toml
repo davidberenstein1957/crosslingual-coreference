@@ -2,7 +2,7 @@
 name = "crosslingual-coreference"
 version = "0.2.9"
 description = "A multi-lingual approach to AllenNLP CoReference Resolution, along with a wrapper for spaCy."
-authors = ["David Berenstein <david.berenstein@pandoraintelligence.com>"]
+authors = ["David Berenstein <david.m.berenstein@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/pandora-intelligence/crosslingual-coreference"
