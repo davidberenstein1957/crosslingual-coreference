@@ -27,6 +27,7 @@ predictor = Predictor(
 )
 
 print(predictor.predict(text)["resolved_text"])
+print(predictor.pipe([text])[0]["resolved_text"])
 # Note you can also get 'cluster_heads' and 'clusters'
 # Output
 #
