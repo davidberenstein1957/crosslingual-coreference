@@ -42,5 +42,5 @@ def make_crosslingual_coreference(
         model_name=model_name,
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
-        char_indices=char_indices
+        char_indices=char_indices,
     )
