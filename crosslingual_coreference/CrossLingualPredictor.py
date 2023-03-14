@@ -43,12 +43,14 @@ class CrossLingualPredictor(object):
         model_name: str = "minilm",
         chunk_size: Union[int, None] = None,  # determines the # sentences per batch
         chunk_overlap: int = 2,  # determines the # of overlapping sentences per chunk
+        char_indices: bool = False,
     ) -> None:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.language = language
         self.filename = None
         self.device = device
+        self.char_indices = char_indices
         self.model_url = MODELS[model_name]["url"]
         self.resolver = Resolver()
         self.download_model()
@@ -129,6 +131,19 @@ class CrossLingualPredictor(object):
 
         prediction = {"clusters": merged_clusters, "resolved_text": resolved_text, "cluster_heads": heads}
 
+        if self.char_indices:
+            # clusters
+            for cluster in prediction["clusters"]:
+                for span in cluster:
+                    span[0] = doc[span[0]].idx
+                    span[1] = doc[span[1] - 1].idx + len(doc[span[1] - 1])
+
+            # cluster heads
+            for head_key in prediction["cluster_heads"].keys():
+                prediction["cluster_heads"][head_key][0] = doc[prediction["cluster_heads"][head_key][0]].idx
+                prediction["cluster_heads"][head_key][1] = doc[prediction["cluster_heads"][head_key][1] - 1].idx \
+                    + len(doc[prediction["cluster_heads"][head_key][1] - 1])
+
         return prediction
 
     def pipe(self, texts: List[str]):
@@ -152,9 +167,23 @@ class CrossLingualPredictor(object):
             json_predictions = self.predictor.predict_batch_json(json_batch)
             clusters_predictions = [prediction.get("clusters") for prediction in json_predictions]
 
-            for spacy_doc, cluster in zip(spacy_document_list, clusters_predictions):
-                resolved_text, heads = self.resolver.replace_corefs(spacy_doc, cluster)
-                predictions.append({"clusters": cluster, "resolved_text": resolved_text, "cluster_heads": heads})
+            for spacy_doc, clusters in zip(spacy_document_list, clusters_predictions):
+                resolved_text, heads = self.resolver.replace_corefs(spacy_doc, clusters)
+
+                if self.char_indices:
+                    # clusters
+                    for cluster in clusters:
+                        for span in cluster:
+                            span[0] = spacy_doc[span[0]].idx
+                            span[1] = spacy_doc[span[1] - 1].idx + len(spacy_doc[span[1] - 1])
+
+                    # cluster heads
+                    for head_key in heads.keys():
+                        heads[head_key][0] = spacy_doc[heads[head_key][0]].idx
+                        heads[head_key][1] = spacy_doc[heads[head_key][1] - 1].idx \
+                            + len(spacy_doc[heads[head_key][1] - 1])
+
+                predictions.append({"clusters": clusters, "resolved_text": resolved_text, "cluster_heads": heads})
 
         return predictions
 
