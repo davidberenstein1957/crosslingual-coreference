@@ -24,6 +24,7 @@ __all__ = ["Predictor"]
         "model_name": "minilm",
         "chunk_size": None,
         "chunk_overlap": 2,
+        "char_indices": False,
     },
 )
 def make_crosslingual_coreference(
@@ -33,6 +34,7 @@ def make_crosslingual_coreference(
     model_name: str,
     chunk_size: Union[int, None],
     chunk_overlap: int,
+    char_indices: bool,
 ):
     return SpacyPredictor(
         language=nlp.path.name.split("-")[0],
@@ -40,4 +42,5 @@ def make_crosslingual_coreference(
         model_name=model_name,
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
+        char_indices=char_indices
     )

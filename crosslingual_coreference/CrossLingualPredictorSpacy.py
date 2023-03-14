@@ -14,8 +14,9 @@ class CrossLingualPredictorSpacy(Predictor):
         model_name: str = "minilm",
         chunk_size: Union[int, None] = None,
         chunk_overlap: int = 2,
+        char_indices: bool = False,
     ) -> None:
-        super().__init__(language, device, model_name, chunk_size, chunk_overlap)
+        super().__init__(language, device, model_name, chunk_size, chunk_overlap, char_indices)
         Doc.set_extension("coref_clusters", default=None, force=True)
         Doc.set_extension("resolved_text", default=None, force=True)
         Doc.set_extension("cluster_heads", default=None, force=True)
