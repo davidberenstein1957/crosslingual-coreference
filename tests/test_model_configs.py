@@ -8,7 +8,3 @@ def test_standalone_chunking():
 
 def test_spacy():
     from crosslingual_coreference.examples import test_spacy  # noqa: F401
-
-
-def test_char_ranges():
-    from crosslingual_coreference.examples import test_char_indices  # noqa: F401

@@ -1,6 +1,6 @@
 import itertools
 import pathlib
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import requests
 import tqdm  # progress bar
@@ -128,21 +128,9 @@ class CrossLingualPredictor(object):
 
         merged_clusters = self.merge_clusters(corrected_clusters)
         resolved_text, heads = self.resolver.replace_corefs(doc, merged_clusters)
+        merged_clusters, heads = self.convert_indices(merged_clusters, heads, doc)
 
         prediction = {"clusters": merged_clusters, "resolved_text": resolved_text, "cluster_heads": heads}
-
-        if self.char_indices:
-            # clusters
-            for cluster in prediction["clusters"]:
-                for span in cluster:
-                    span[0] = doc[span[0]].idx
-                    span[1] = doc[span[1] - 1].idx + len(doc[span[1] - 1])
-
-            # cluster heads
-            for head_key in prediction["cluster_heads"].keys():
-                prediction["cluster_heads"][head_key][0] = doc[prediction["cluster_heads"][head_key][0]].idx
-                prediction["cluster_heads"][head_key][1] = doc[prediction["cluster_heads"][head_key][1] - 1].idx \
-                    + len(doc[prediction["cluster_heads"][head_key][1] - 1])
 
         return prediction
 
@@ -169,19 +157,7 @@ class CrossLingualPredictor(object):
 
             for spacy_doc, clusters in zip(spacy_document_list, clusters_predictions):
                 resolved_text, heads = self.resolver.replace_corefs(spacy_doc, clusters)
-
-                if self.char_indices:
-                    # clusters
-                    for cluster in clusters:
-                        for span in cluster:
-                            span[0] = spacy_doc[span[0]].idx
-                            span[1] = spacy_doc[span[1] - 1].idx + len(spacy_doc[span[1] - 1])
-
-                    # cluster heads
-                    for head_key in heads.keys():
-                        heads[head_key][0] = spacy_doc[heads[head_key][0]].idx
-                        heads[head_key][1] = spacy_doc[heads[head_key][1] - 1].idx \
-                            + len(spacy_doc[heads[head_key][1] - 1])
+                clusters, heads = self.convert_indices(clusters, heads, spacy_doc)
 
                 predictions.append({"clusters": clusters, "resolved_text": resolved_text, "cluster_heads": heads})
 
@@ -255,3 +231,38 @@ class CrossLingualPredictor(object):
         main_doc_clus.sort()
         main_doc_clus = list(k for k, _ in itertools.groupby(main_doc_clus))
         return main_doc_clus
+
+    @staticmethod
+    def convert_indices(merged_clusters: List[List[List[int]]], heads: dict, spacy_doc: Doc) -> Tuple[list, dict]:
+        """Convert indices from token to character level
+
+        Args:
+            merged_clusters (List[List[List[int]]]): List of clusters
+            heads (Dict[List[int]]): Dictionary of cluster heads
+            spacy_doc (Doc): Spacy doc object
+
+        Returns:
+            List[List[List[int]]], Dict[List[int]]: Tuple of converted clusters and heads
+        """
+        char_merged_clusters = []
+        char_heads = {}
+
+        # clusters
+        for cluster in merged_clusters:
+            for span in cluster:
+                char_span = [-1, -1]
+
+                char_span[0] = spacy_doc[span[0]].idx
+                char_span[1] = spacy_doc[span[1] - 1].idx + len(spacy_doc[span[1] - 1])
+
+                char_merged_clusters.append(char_span)
+
+        # cluster heads
+        for head_key in heads.keys():
+            char_heads[head_key] = [-1, -1]
+
+            char_heads[head_key][0] = spacy_doc[heads[head_key][0]].idx
+            char_heads[head_key][1] = spacy_doc[heads[head_key][1] - 1].idx \
+                + len(spacy_doc[heads[head_key][1] - 1])
+
+        return char_merged_clusters, char_heads
