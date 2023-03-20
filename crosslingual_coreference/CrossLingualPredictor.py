@@ -43,14 +43,12 @@ class CrossLingualPredictor(object):
         model_name: str = "minilm",
         chunk_size: Union[int, None] = None,  # determines the # sentences per batch
         chunk_overlap: int = 2,  # determines the # of overlapping sentences per chunk
-        char_indices: bool = False,
     ) -> None:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.language = language
         self.filename = None
         self.device = device
-        self.char_indices = char_indices
         self.model_url = MODELS[model_name]["url"]
         self.resolver = Resolver()
         self.download_model()
