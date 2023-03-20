@@ -5,7 +5,7 @@ from typing import List, Tuple, Union
 import requests
 import tqdm  # progress bar
 from allennlp.predictors.predictor import Predictor
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 
 from .CorefResolver import CorefResolver as Resolver
 
@@ -249,20 +249,15 @@ class CrossLingualPredictor(object):
 
         # clusters
         for cluster in merged_clusters:
+            char_cluster = []
             for span in cluster:
-                char_span = [-1, -1]
-
-                char_span[0] = spacy_doc[span[0]].idx
-                char_span[1] = spacy_doc[span[1] - 1].idx + len(spacy_doc[span[1] - 1])
-
-                char_merged_clusters.append(char_span)
+                spacy_span = Span(spacy_doc, span[0], span[1] + 1)
+                char_cluster.append([spacy_span.start_char, spacy_span.end_char])
+            char_merged_clusters.append(char_cluster)
 
         # cluster heads
         for head_key in heads.keys():
-            char_heads[head_key] = [-1, -1]
-
-            char_heads[head_key][0] = spacy_doc[heads[head_key][0]].idx
-            char_heads[head_key][1] = spacy_doc[heads[head_key][1] - 1].idx \
-                + len(spacy_doc[heads[head_key][1] - 1])
+            span = Span(spacy_doc, heads[head_key][0], heads[head_key][1] + 1)
+            char_heads[head_key] = [span.start_char, span.end_char]
 
         return char_merged_clusters, char_heads
