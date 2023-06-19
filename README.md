@@ -63,8 +63,6 @@ predictor = Predictor(
 ```python
 import spacy
 
-import crosslingual_coreference
-
 text = (
     "Do not forget about Momofuku Ando! He created instant noodles in Osaka. At"
     " that location, Nissin was founded. Many students survived by eating these"
@@ -106,7 +104,6 @@ print(doc._.cluster_heads)
 This only works with spacy >= 3.3.
 ```python
 import spacy
-import crosslingual_coreference
 from spacy.tokens import Span
 from spacy import displacy
 
