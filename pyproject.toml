@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crosslingual-coreference"
-version = "0.2.9"
+version = "0.3.0"
 description = "A multi-lingual approach to AllenNLP CoReference Resolution, along with a wrapper for spaCy."
 authors = ["David Berenstein <david.m.berenstein@gmail.com>"]
 license = "MIT"
@@ -21,6 +21,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development"
 ]
+packages = [{include = "crosslingual_coreference"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
@@ -31,6 +32,10 @@ scipy = "^1.7"
 cached-path = "1.1.2"
 protobuf = "^3.20"
 
+[tool.poetry.plugins]
+
+[tool.poetry.plugins."spacy_factories"]
+"spacy" = "crosslingual_coreference.__init__:make_crosslingual_coreference"
 
 [tool.poetry.dev-dependencies]
 pytest = "~7.0"
